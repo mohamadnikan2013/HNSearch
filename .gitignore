@@ -1,3 +1,4 @@
+Debug
 # Compiled Object files
 *.slo
 *.lo
@@ -26,3 +27,6 @@
 *.exe
 *.out
 *.app
+*.enc
+*.idb
+*.tlog
