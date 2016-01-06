@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cstdio>
 #include <string>
-
+//#include "stdafx.h"
 #include "infrastructure.h"
 #include "interface.h"
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
@@ -22,7 +22,16 @@ string beautiful_find(string statement, string data)
 }
 int main(int argc, char** argv) {
 	//YOU HAVE TO TEST THE CODE IN DEV-C++ BEFORE SENDING TO QUERA
-	phase2::index();
+	//phase2::index();
+	//string test = "\nsalam\n";
+	//int start;
+	//cin >> start;
+
+	//int index = test.find('\n', start);
+	//cout << endl << index << endl;
+	//main(argc, argv);
+	//phase2::index();
+	phase3::test();
 	return 0;
 	//	string spacing_chars[] = {" ", "\n", "salam "};
 	//	cout<<spacing_chars[2][1];

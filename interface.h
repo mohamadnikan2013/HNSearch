@@ -1,16 +1,34 @@
 #include<iostream>
 #include<string>
 #include "infrastructure.h"
-
+#include "just_search.h"
 using namespace std;
 //using namespace searching_tools;
 using namespace working_with_file;
+namespace phase3
+{
+	void test()
+	{
+		file myfile("Data/AppData/index.txt", 0);
+		myfile.StartWork();
+		map<string, struct index_output::index_row> mymap = index_output::str_deserializer(myfile.content);
+		cout << mymap.size() << endl;
+		string first_str = "hello";
+		auto first = new bool_search::object_to_compare(first_str);
+		string second_str = "help";
+		auto second = new bool_search::object_to_compare(second_str);
+		auto test = new bool_search::compare_doer(0, &mymap, first, second);
+		test->calculate_result();
+		string salam;
+	}
+}
 namespace phase2{
 	void index()
 	{
 		index_output::structured_data s;
 
 		data_to_work d;
+		d.save_file_ids();
 		cout << endl << "Processing..." << endl;
 		string current_content = "";
 		

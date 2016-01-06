@@ -123,17 +123,32 @@
 				//list_of_paths.content += "\n";
 				string paths = list_of_paths.content;
 				//"E:/New Projects/SharifSearch/Data/Source/23/61039\nE:/New Projects/SharifSearch/Data/Source/23/60912\n";
+				int counter = 1;
 				while (paths.size() > 0)
 				{
-	
 					string current_path_of_file = paths.substr(0, paths.find('\n'));
-					file new_file(current_path_of_file, 0);
+					file new_file(current_path_of_file, counter);
+					counter++;
 					files.push_back(new_file);
 					cout<<"Importing: "<<new_file.path<<endl;
 					paths = paths.substr(paths.find('\n') + 1, paths.size() - paths.find('\n') - 1) ;
-				}	
+				}
 				//USE ONLY FOR TEST
 				//cout<<files[2].path;			
+			}
+			void save_file_ids()
+			{
+				string output = "";
+				for (int i = 0; i < files.size(); i++)
+				{
+					stringstream additional;
+					additional << files[i].ID;
+					output += additional.str() + "!" + files[i].path + "\n";
+				}
+				file id_data("Data/AppData/id.txt", 0);
+				id_data.content = output;
+				id_data.write2(output, 0);
+				cout << "File Ids Saved" << endl;
 			}
 		
 		};
@@ -311,9 +326,11 @@
 		
 		
 			//cout<<index<<"\t"<<((*conwtent)[index])<<endl;
-			string spacing_chars[] = {" ", "\n", ",", ".", "\"", "'", ">", "<", "!", "?", "/", "|", ")", "(", "}", "{"};//ATTENTION IF YOU  CHANGE this array CHANGE for Index also
+			//HEY THIS IS FOR PHASE1 SEARCH IT DOESN'T AFFECT PHASE 2 OR 3 AND LATER ...
+			string spacing_chars[] = { " ", "\n", ",", ".", "\"", ">", "<", "!", "?", "/", "|", ")", "(", "}", "{", "\t", "+", "-", "[","]", ":" 
+			};//ATTENTION IF YOU  CHANGE this array CHANGE for Index also
 		
-			for (int i = 0; i < 16; i++)
+			for (int i = 0; i < 21; i++)
 			{
 				if (((*content)[index]) == (spacing_chars[i][0]))
 					result = 1;
@@ -526,12 +543,16 @@
 		//}
 		vector<string> normalize::spliter(string str)
 		{
-			vector<string> spacing_chars = { " ", "\n", ",", ".", "\"", ">", "<", "!", "?", "/", "|", ")", "(", "}", "{" };
+			//vector<string> spacing_chars = { " ", "\n", ",", ".", "\"", ">", "<", "!", "?", "/", "|", ")", "(", "}", "{" };
+			string spacing_char_arr[] = { " ", "\n", ",", ".", "\"", ">", "<", "!", "?", "/", "|", ")", "(", "}", "{", "\t", "+", "-", "[","]", ":" };
+			vector<string> spacing_chars(spacing_char_arr, spacing_char_arr + sizeof(spacing_char_arr) / sizeof(spacing_char_arr[0]));
 
 			for (int i = 1; i < spacing_chars.size(); i++)
 			{
 				str = searching_tools::my_replace(str, spacing_chars[i], " ");
 			}
+			if (str.find('\t') != -1)
+				cout << "found \\ t in this str " << str<<endl;
 			//CHECK FOR OTHER SEPERATORS
 			vector<string> result;
 			istringstream iss(str);
@@ -600,6 +621,24 @@
 			int count_of_repeats;
 			vector<place> places_occurred;
 		};
+		map<int, string> text_splitter_booster(string& input)
+		{
+			int first_pos = -1;
+			int counter = 1;
+			map<int, string> result;
+			while (1)
+			{
+				int second_pos = input.find('\n', first_pos + 1);
+				if (second_pos == -1)
+					break;
+				
+				result[counter] = input.substr(first_pos + 1, second_pos - first_pos);
+				first_pos = second_pos;
+				counter++;
+			}
+			return result;
+			
+		}
 		string str_serializer(map<string, struct index_row>& input_map)
 		{
 			string result = "";
@@ -608,18 +647,85 @@
 				//Add word
 				result += it->first;
 				if (it->first == "")
-					string error_h;
+					cout << "My exception: str_serializer(...) is saying item->first is null"<<endl;
 				//Add index_row
-				result += "{" + it->second.word + "/" + to_string(it->second.count_of_repeats) + "/";
+				stringstream ad;
+				ad << it->second.count_of_repeats;
+				result += "{" + it->second.word + "/" + ad.str() + "/";
 				//Add index_row vector
 				result += "[";
+				
 				for (int i = 0; i < it->second.places_occurred.size(); i++)
-					result += to_string(it->second.places_occurred[i].file_id) + "/";
+				{
+					stringstream ad2;
+					ad2 << it->second.places_occurred[i].file_id;
+					result += ad2.str() + "/";
+				}
 				result += "]";
 				result += "}\n";
 				//result += it->second;
 			}
 
+			return result;
+		}
+		map<string, struct index_row> str_deserializer(string& main_input)
+		{
+			map<int, string> input_boost = text_splitter_booster(main_input);
+
+			map<string, struct index_row> result;
+
+			for (int counter = 1; counter <= input_boost.size(); counter++)
+			{
+				string input = input_boost[counter];
+				int i = 0;
+				while (input.size() > 0)
+				{
+					string map_row_str = input.substr(0, input.find('\n') + 1);
+					if (input.size() >= map_row_str.size())
+						input = input.substr(map_row_str.size(), input.size() - map_row_str.size());
+					else
+						cout << "myError: input is smaller than map_row input is " << input << endl;
+
+					string first = map_row_str.substr(0, map_row_str.find('{')); // We don't need '{" so I didn't + 1 it!
+
+					struct index_row second;
+					int aculad_index = map_row_str.find('{');
+
+					string second_str = map_row_str.substr(aculad_index + 1, map_row_str.find(']') - aculad_index);
+					int slash_index = second_str.find('/');
+					second.word = second_str.substr(0, slash_index);
+					//Cleaning second_str from the word found
+					second_str = second_str.substr(slash_index + 1, second_str.size() - slash_index);
+
+					//Refreshing Index
+					slash_index = second_str.find('/');
+
+					
+					second.count_of_repeats = stoi(second_str.substr(0, slash_index));
+
+					second_str = second_str.substr(second_str.find('['), second_str.size() - second_str.find('[') - 1);
+					while (second_str.size() > 0)
+					{
+						string file_id_str = second_str.substr(0, second_str.find('/') + 1);
+						/*second_str.erase(file_id_str.size());*/
+						second_str.erase(0, file_id_str.size());
+
+						file_id_str = searching_tools::my_replace(file_id_str, "[", "");
+						file_id_str = searching_tools::my_replace(file_id_str, "/", "");
+
+						place p;
+						p.file_id = std::stoi(file_id_str);
+						second.places_occurred.push_back(p);
+
+
+					}
+					i++;
+					if (counter % 500 == 0)
+						cout << counter << " th word has been imported" << endl;
+					result[first] = second;
+					//input is substr-ed at the first of loop
+				}
+			}
 			return result;
 		}
 		struct index_row* main_search(string term, vector<index_row>& vector_of_data, vector<string>& brother, map<string, struct index_row>& map_input)
@@ -710,6 +816,7 @@
 		}
 
 		//THIS IS MAIN SEARCH FUNCTION, MOST OF PERFORMANCE IMPROVEMENTS MUST HAPPEN HERE
+		//After Using map the performance has been improved a lot
 
 	}
 
