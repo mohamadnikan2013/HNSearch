@@ -38,12 +38,12 @@ namespace bool_search
 			return result;
 		}
 		
-		static compare_doer* string_to_compare_obj(string search_statement)
-		{
-			//ATTENTION: NORMALIZE THE SEARCH_STATEMENT BEFORE PASSING TO THIS METHOD
+		//static compare_doer* string_to_compare_obj(string search_statement)
+		//{
+		//	//ATTENTION: NORMALIZE THE SEARCH_STATEMENT BEFORE PASSING TO THIS METHOD
 
-			
-		}
+		//	
+		//}
 	};
 	//template<class my_T>
 	class object_to_compare

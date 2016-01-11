@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 	//cout << endl << index << endl;
 	//main(argc, argv);
 	//phase2::index();
-	phase3::test();
+	phase4::test();
 	return 0;
 	//	string spacing_chars[] = {" ", "\n", "salam "};
 	//	cout<<spacing_chars[2][1];

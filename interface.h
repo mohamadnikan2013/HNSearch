@@ -2,9 +2,25 @@
 #include<string>
 #include "infrastructure.h"
 #include "just_search.h"
+#include "AI.h"
 using namespace std;
 //using namespace searching_tools;
 using namespace working_with_file;
+namespace phase4
+{
+	void test()
+	{
+		cout << "Started" << endl;
+
+		file myfile("Data/AppData/index.txt", 0);
+		myfile.StartWork();
+		map<string, struct index_output::index_row> mymap = index_output::str_deserializer(myfile.content);
+		cout << mymap.size() << endl;
+
+		auto new_map = new_indexing::process_new_string(mymap);
+		cout << new_map->size() << endl;
+	}
+}
 namespace phase3
 {
 	void test()
