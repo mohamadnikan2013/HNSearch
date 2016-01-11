@@ -471,20 +471,20 @@
 				vector<string> sort (vector<string> words);
 				void stemming_function (void);
 				//vector<string> duplicate_remover (vector<string> words);
-				void stop_words_remover(void);
-				vector<string>* stop_words;
+				//void stop_words_remover(void);
+				//vector<string>* stop_words;
 			
 				string content;
 				vector<string> word;
 			
-				normalize(string input, vector<string> * st_word)
+				normalize(string input)
 				{
 					std::transform(input.begin(), input.end(), input.begin(), ::tolower);
 					content = input;
 					
 				
 					
-					stop_words = st_word;
+					//stop_words = st_word;
 					
 					word = spliter(content);
 					//stop_words_remover();
@@ -509,21 +509,21 @@
 		{
 		
 		}
-		void normalize::stop_words_remover(void)
-		{
-			for (int i = 0; i < (*stop_words).size(); i++)
-			{
-				////NEW REMOVER
-				//content = searching_tools::my_replace(this->content, stop_words[i], "");
+		//void normalize::stop_words_remover(void)
+		//{
+		//	for (int i = 0; i < (*stop_words).size(); i++)
+		//	{
+		//		////NEW REMOVER
+		//		//content = searching_tools::my_replace(this->content, stop_words[i], "");
 
 
-				vector<string>::iterator itr = find(this->word.begin(), this->word.end(), (*stop_words)[i]);
-				if (itr != this->word.end())
-				{
-					this->word.erase(itr);
-				}
-			}
-		}
+		//		vector<string>::iterator itr = find(this->word.begin(), this->word.end(), (*stop_words)[i]);
+		//		if (itr != this->word.end())
+		//		{
+		//			this->word.erase(itr);
+		//		}
+		//	}
+		//}
 		vector<string> normalize::spliter(string str)
 		{
 			vector<string> spacing_chars = { " ", "\n", ",", ".", "\"", ">", "<", "!", "?", "/", "|", ")", "(", "}", "{" };
@@ -600,7 +600,28 @@
 			int count_of_repeats;
 			vector<place> places_occurred;
 		};
+		string str_serializer(map<string, struct index_row>& input_map)
+		{
+			string result = "";
+			for (map<string, struct index_row>::iterator it = input_map.begin(); it != input_map.end(); ++it)
+			{
+				//Add word
+				result += it->first;
+				if (it->first == "")
+					string error_h;
+				//Add index_row
+				result += "{" + it->second.word + "/" + to_string(it->second.count_of_repeats) + "/";
+				//Add index_row vector
+				result += "[";
+				for (int i = 0; i < it->second.places_occurred.size(); i++)
+					result += to_string(it->second.places_occurred[i].file_id) + "/";
+				result += "]";
+				result += "}\n";
+				//result += it->second;
+			}
 
+			return result;
+		}
 		struct index_row* main_search(string term, vector<index_row>& vector_of_data, vector<string>& brother, map<string, struct index_row>& map_input)
 		{
 			//very simple and bad performance algorithm:
@@ -641,6 +662,7 @@
 			{
 				/*table.push_back(row);
 				index_table_brother.push_back(row.word);*/
+				
 				index_table2[row.word] = row;
 			}
 			void process_inputs(vector<string>& words, int file_id)
@@ -648,8 +670,10 @@
 				for (int i = 0; i < words.size(); i++) 
 				{
 					struct index_row* ir = main_search(words[i], index_table, index_table_brother, index_table2);
-					if (ir == NULL)
+					if (ir->word == "")
 					{
+						/*if (words[i] == "")
+							string er;*/
 						struct index_row new_row;
 						struct place p;
 						p.file_id = file_id;
@@ -669,6 +693,7 @@
 				}
 				//std::sort(index_table_brother.begin(), index_table_brother.end());
 				//std::sort(index_table.begin(), index_table.end()); PROBLEM IS HERE WRITE A FUNCTION FOR THAT
+				
 			}
 			void remove_stop_words(vector<string>* stop_words_list)
 			{

@@ -19,7 +19,8 @@ namespace phase2{
 
 		string stop_words_content = stop_words_file.content;
 		vector<string> stop_words = indexing::normalize::spliter(stop_words_content);
-		for (int i = 0; i < 100; i++)
+		string console_output = "";
+		for (int i = 0; i < d.files.size(); i++)
 		{
 			d.files[i].StartWork();
 			current_content = d.files[i].content;
@@ -35,20 +36,31 @@ namespace phase2{
 					current_content = d.files[i].content.substr(0, end_index + 1);
 				}*/
 
-				//current_content += d.files[i].content;
-
-
-				indexing::normalize n(current_content, &stop_words);
+				//current_content += d.files[i].content
+				indexing::normalize n(current_content);
 				s.process_inputs(n.word, i + 1);
 				//d.files[i].content = d.files[i].content.substr(current_content.size(), d.files[i].content.size() - current_content.size());
-			
-			cout << "File index process completed with id: " << (i + 1) << endl;
+				console_output += "File index process completed with id: " + (to_string(i + 1)) + "\n";
+				if ((i % 5 == 0) || i == d.files.size() - 1)
+				{
+					cout << console_output;
+					console_output = "";
+				}
+				
 		}
 		cout << "Now, Removing stopwords from hole index..." << endl;
 		s.remove_stop_words(&stop_words);
-		cout << "Indexing process has been completed successfully.";
+		cout << "Saving generated index..." << endl;
+		string file_output = "";
+		file_output = index_output::str_serializer(s.index_table2);
+		working_with_file::file index_output_file("Data/AppData/index.txt", 0);
+		index_output_file.write(file_output);
+		cout << "Indexing process has been completed successfully" << endl;
+		
+		cout << endl << "Index Operation has been ended";
 		string t;
 		cin >> t;
+		
 
 	}
 }
