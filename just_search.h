@@ -14,6 +14,19 @@ using namespace std;
 namespace bool_search
 {
 	class tools {
+		static vector<string> search_splitter(string input)
+		{
+			vector<string> result;
+			istringstream iss(input);
+			while (iss)
+			{
+				string sub;
+				iss >> sub;
+				result.push_back(sub);
+			}
+			result.erase(result.end() - 1);
+			return result;
+		}
 	public:
 		static set<int>* place_vector_to_Int_set(vector<index_output::place>& input)
 		{
@@ -23,6 +36,13 @@ namespace bool_search
 				result->insert(input[i].file_id);
 			}
 			return result;
+		}
+		
+		static compare_doer* string_to_compare_obj(string search_statement)
+		{
+			//ATTENTION: NORMALIZE THE SEARCH_STATEMENT BEFORE PASSING TO THIS METHOD
+
+			
 		}
 	};
 	//template<class my_T>
@@ -72,10 +92,11 @@ namespace bool_search
 	{
 		object_to_compare* first;
 		object_to_compare* second;
-		object_to_compare* result;
+		
 		map<string, struct index_output::index_row>* main_index_table;
 		short is_and;
 	public:
+		object_to_compare* result;
 		compare_doer(short is_and, map<string, struct index_output::index_row>* main_index_table,
 			object_to_compare* first, object_to_compare* second)
 		{

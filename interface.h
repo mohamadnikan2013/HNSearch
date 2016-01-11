@@ -17,8 +17,14 @@ namespace phase3
 		auto first = new bool_search::object_to_compare(first_str);
 		string second_str = "help";
 		auto second = new bool_search::object_to_compare(second_str);
-		auto test = new bool_search::compare_doer(0, &mymap, first, second);
+		auto test = new bool_search::compare_doer(0
+			, &mymap, first, second);
 		test->calculate_result();
+		string third_str = "point";
+		auto new_second = new bool_search::object_to_compare(third_str);
+		cout << "second and" << endl;
+		auto test2 = new bool_search::compare_doer(1, &mymap, test->result, new_second);
+		test2->calculate_result();
 		string salam;
 	}
 }

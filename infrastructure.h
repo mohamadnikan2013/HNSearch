@@ -551,6 +551,8 @@
 			{
 				str = searching_tools::my_replace(str, spacing_chars[i], " ");
 			}
+
+			//FOR DEBUG
 			if (str.find('\t') != -1)
 				cout << "found \\ t in this str " << str<<endl;
 			//CHECK FOR OTHER SEPERATORS
