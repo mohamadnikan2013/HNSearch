@@ -11,7 +11,7 @@ namespace phase4
 	void test()
 	{
 		cout << "Started" << endl;
-
+		cout << new_indexing::lev_distance("hell","hallooko");
 		file myfile("Data/AppData/index.txt", 0);
 		myfile.StartWork();
 		map<string, struct index_output::index_row> mymap = index_output::str_deserializer(myfile.content);
