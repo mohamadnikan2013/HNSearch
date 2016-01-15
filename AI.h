@@ -117,6 +117,37 @@ namespace new_indexing {
 		case 'p':
 			return 26;
 			break;
+		case '0':
+			return 40;
+			break;
+		case '1':
+			return 41;
+			break;
+		case '2':
+			return 42;
+			break;
+		case '3':
+			return 43;
+			break;
+		case '4':
+			return 44;
+			break;
+		case '5':
+			return 45;
+			break;
+		case '6':
+			return 46;
+			break;
+		case '7':
+			return 47;
+			break;
+		case '8':
+			return 48;
+			break;
+		case '9':
+			return 49;
+			break;
+
 		}
 	}
 	static int code_generator(const string input1)
@@ -139,5 +170,77 @@ namespace new_indexing {
 		}
 		return result;
 	}
+}
+namespace machine_learning
+{
+	typedef struct Relation_T
+	{
+		string correct_word;
+		int score;
+	} relation_target;
+
+
+	class relation
+	{
+
+	private:
+		multimap <string, relation_target> object_table;
+
+	public:
+		void add(string wrong_word, string correct_word)
+		{
+			relation_target target;
+			auto ret = object_table.equal_range(wrong_word);
+			//If relation  exists in table
+			if (ret.first != ret.second)
+			{
+				for (auto it = ret.first; it != ret.second; ++it)
+				{
+					if (it->second.correct_word == correct_word)
+					{
+						it->second.score++;
+						return;
+					}
+				}
+
+			}
+			//If relation  exists in table
+			target.correct_word = correct_word;
+			target.score = 1;
+			object_table.insert({ wrong_word,target });
+			}
+		vector<relation_target> read(string word)
+		{//ATTENTION OUTPUT IS NOT SORTED//
+			vector<relation_target> my_vec;
+			auto ret = object_table.equal_range(word);
+			for (auto it = ret.first; it != ret.second; ++it)
+			{
+				my_vec.push_back(it->second);
+			}
+			return my_vec;
+		}
+		string str_serializer(void)
+		{
+			string result;
+			for (auto it = object_table.begin(); it != object_table.end(); ++it)
+			{
+				result += it->first + '{' + it->second.correct_word + '/' +to_string( it->second.score) + '\n';
+			}
+			return result;
+		}
+		void str_deserializer(string mystr)
+		{
+			auto mymap = index_output::text_splitter_booster(mystr);
+			for (int counter = 1; counter <= mymap.size(); counter++)
+			{
+				relation_target myrelation;
+				string input = mymap[counter];
+				string first = input.substr(0, input.find('{'));
+				myrelation.correct_word = input.substr(input.find('{')+1, input.find('/')- input.find('{'));
+				myrelation.score = stoi(input.substr(input.find('/') + 1, input.size() - input.find('/')));
+				object_table.insert({ first,myrelation });
+			}
+		}
+	};
 }
 #endif

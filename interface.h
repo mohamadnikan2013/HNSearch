@@ -8,6 +8,23 @@ using namespace std;
 using namespace working_with_file;
 namespace phase4
 {
+	void test_serialize()
+	{
+		machine_learning::relation serial;
+		serial.str_deserializer("aple{apple/2\naple{able/1\nu{you/5\n");
+	}
+	void test_machine_learning()
+	{
+		machine_learning::relation my_relation;
+		my_relation.add("aple", "able" );
+		my_relation.add("aple", "apple");
+		my_relation.add("salm", "salam");
+		my_relation.add("aple", "apple");
+		my_relation.add("u", "you");
+		my_relation.add("u", "you");
+		auto result = my_relation.read("aple");
+		cout << result.size();
+ 	}
 	void test()
 	{
 		cout << "Started" << endl;

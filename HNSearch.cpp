@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 	//cout << endl << index << endl;
 	//main(argc, argv);
 	//phase2::index();
-	phase4::test();
+	phase4::test_serialize();
 	return 0;
 	//	string spacing_chars[] = {" ", "\n", "salam "};
 	//	cout<<spacing_chars[2][1];
@@ -47,28 +47,28 @@ int main(int argc, char** argv) {
 	//	cout<<test.size()<<endl;
 	//	
 	//	return 0;
-	cout << "In the name of God \nWelcome to SharfSearch Project-Phase1 Developed by Mohammad Nikan Ghorbani and Mohammad Haghighat." << endl;
-	cout << "Please select one of these options:" << endl << "1.Count of search statement in each file using default data (statement as input)";
-	cout << endl << "2.Replace in file (File path, statement, replace term as input)" << endl << "3.Index of search statement using default data (statement as input)";
-	cout << endl << endl << "0.Exit";
-	cout << endl << endl << "Enter number of operation: ";
-	short input;
-	cin >> input;
+	//cout << "In the name of God \nWelcome to SharfSearch Project-Phase1 Developed by Mohammad Nikan Ghorbani and Mohammad Haghighat." << endl;
+	//cout << "Please select one of these options:" << endl << "1.Count of search statement in each file using default data (statement as input)";
+	//cout << endl << "2.Replace in file (File path, statement, replace term as input)" << endl << "3.Index of search statement using default data (statement as input)";
+	//cout << endl << endl << "0.Exit";
+	//cout << endl << endl << "Enter number of operation: ";
+	//short input;
+	//cin >> input;
 
-	if (input == 0)
+	//if (input == 0)
 
-		exit(0);
+	//	exit(0);
 
-	if (input == 1)
-		phase1::count();
+	//if (input == 1)
+	//	phase1::count();
 
-	if (input == 2)
-		phase1::replace();
+	//if (input == 2)
+	//	phase1::replace();
 
-	if (input == 3)
-		phase1::report_index();
+	//if (input == 3)
+	//	phase1::report_index();
 
-	cout << endl << "----------------------------------" << endl << endl;
+	//cout << endl << "----------------------------------" << endl << endl;
 
 
 
