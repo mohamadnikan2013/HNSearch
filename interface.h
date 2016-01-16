@@ -20,9 +20,40 @@ namespace phase4
 		auto new_map = new_indexing::process_new_string(mymap);
 		cout << new_map->size() << endl;
 	}
+	
 }
 namespace phase3
 {
+	void test_of_final_query_resolver()
+	{
+		file myfile("Data/AppData/index.txt", 0);
+		myfile.StartWork();
+		map<string, struct index_output::index_row> mymap = index_output::str_deserializer(myfile.content);
+		cout << mymap.size() << endl;
+
+		while (1)
+		{
+			cout << "Please Enter your query:" << endl;
+			string search_string;
+
+			getline(cin, search_string);
+			auto result = bool_search::final_result_of_query(search_string, &mymap);
+			cout << "Count of matches: " << result->main_object_if_object->size() << endl << endl;
+		}
+	}
+	void test_of_string_to_result()
+	{
+		file myfile("Data/AppData/index.txt", 0);
+		myfile.StartWork();
+		map<string, struct index_output::index_row> mymap = index_output::str_deserializer(myfile.content);
+		cout << mymap.size() << endl;
+		cout << "Please Enter string without )(" << endl;
+		string search_string;
+		
+		getline(cin, search_string);
+		auto result = bool_search::search_statement_to_result(search_string, &mymap, NULL);
+		cout << "Count of matches: " << result->main_object_if_object->size() << endl;
+	}
 	void test()
 	{
 		file myfile("Data/AppData/index.txt", 0);
