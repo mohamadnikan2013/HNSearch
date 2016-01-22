@@ -6,8 +6,42 @@
 using namespace std;
 //using namespace searching_tools;
 using namespace working_with_file;
+namespace gui
+{
+	void color_test()
+	{
+		system("color 0a");
+		cout << "Hello World";
+
+		cin.ignore();
+	}
+}
 namespace phase4
 {
+	void last_test()
+	{
+
+		file myfile("Data/AppData/index.txt", 0);
+		myfile.StartWork();
+		map<string, struct index_output::index_row> mymap = index_output::str_deserializer(myfile.content);
+		cout << mymap.size() << endl;
+		while(1)
+		{
+			cout << "\a" << endl << endl;
+			string str;
+			cin >> str;
+			new_indexing::process_of_match_calculation hello(str, mymap);
+			hello.gen_output();
+		}
+	}
+	void guess_with_calculation()
+	{
+		cout << "Please enter your word" << endl;
+		string input_word;
+		cin >> input_word;
+
+
+	}
 	void test_serialize()
 	{
 		machine_learning::relation serial;

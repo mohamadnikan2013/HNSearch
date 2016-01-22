@@ -37,7 +37,7 @@ namespace new_indexing {
 		switch (ch)
 		{
 		default:
-			cout << "DANGER not in our words";
+			return 0;
 			break;
 		case 'q':
 			return 1;
@@ -170,6 +170,61 @@ namespace new_indexing {
 		}
 		return result;
 	}
+
+	class process_of_match_calculation
+	{
+	public:
+		multimap<int, string>* similar_words;
+		process_of_match_calculation(string user_input, map<string, struct index_output::index_row>& mymap)
+		{
+			auto table2 = process_new_string(mymap);
+			auto input_code = code_generator(user_input);
+			similar_words = new multimap<int, string>;
+
+			for (int i = input_code - 100; i < input_code + 100; i++)
+			{
+				for (auto kalame : (*table2)[i])
+				{
+					auto lev_dis = lev_distance(user_input, kalame);
+					similar_words->insert({ lev_dis, kalame });
+
+				}
+			}
+
+		}
+		/*map<int, string>* output_map;*/
+		void gen_output()
+		{
+			/*output_map = new map<int, string>;*/
+			vector<string> output_vec;
+			auto ret = similar_words->equal_range(1);
+			for (auto it = ret.first; it != ret.second; ++it)
+			{
+				output_vec.push_back(it->second);
+				cout << it->second << endl;
+				if (output_vec.size() > 10)
+					break;
+			}
+			ret = similar_words->equal_range(2);
+			for (auto it = ret.first; it != ret.second; ++it)
+			{
+				output_vec.push_back(it->second);
+				cout << it->second << endl;
+				if (output_vec.size() > 20)
+					break;
+			}
+			ret = similar_words->equal_range(3);
+			for (auto it = ret.first; it != ret.second; ++it)
+			{
+				output_vec.push_back(it->second);
+				cout << it->second << endl;
+				if (output_vec.size() > 30)
+					break;
+			}
+
+
+		}
+	};
 }
 namespace machine_learning
 {

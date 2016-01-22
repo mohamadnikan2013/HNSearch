@@ -30,8 +30,10 @@ int main(int argc, char** argv) {
 	//int index = test.find('\n', start);
 	//cout << endl << index << endl;
 	//main(argc, argv);
-	//phase2::index();
-	phase4::test_serialize();
+	////phase2::index();
+	//phase4::test_serialize();
+	//return 0;
+	phase4::last_test();
 	return 0;
 	//	string spacing_chars[] = {" ", "\n", "salam "};
 	//	cout<<spacing_chars[2][1];

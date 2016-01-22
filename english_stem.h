@@ -242,7 +242,7 @@ namespace stemming
             //step 4:
             step_4(text);
             //step 5:
-            step_5(text);
+            //step_5(text);
 
             stem<string_typeT>::unhash_y(text);
             }
