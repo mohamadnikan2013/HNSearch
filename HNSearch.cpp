@@ -24,6 +24,7 @@ int main(int argc, char** argv) {
 	//YOU HAVE TO TEST THE CODE IN DEV-C++ BEFORE SENDING TO QUERA
 	phase3::test_of_final_query_resolver();
 	//phase2::index();
+<<<<<<< HEAD
 	return 0;
 	/*cout << "In the name of God \nWelcome to SharfSearch Project-Phase1 Developed by Mohammad Nikan Ghorbani and Mohammad Haghighat." << endl;
 	cout << "Please select one of these options:" << endl << "1.Count of search statement in each file using default data (statement as input)";
@@ -32,20 +33,63 @@ int main(int argc, char** argv) {
 	cout << endl << endl << "Enter number of operation: ";
 	short input;
 	cin >> input;
+=======
+	//string test = "\nsalam\n";
+	//int start;
+	//cin >> start;
 
-	if (input == 0)
+	//int index = test.find('\n', start);
+	//cout << endl << index << endl;
+	//main(argc, argv);
+	////phase2::index();
+	//phase4::test_serialize();
+	//return 0;
+	phase4::last_test();
+	return 0;
+	//	string spacing_chars[] = {" ", "\n", "salam "};
+	//	cout<<spacing_chars[2][1];
+	//	
+	//	vector<string> test;
+	//	test.push_back("salam");
+	//	test.push_back("chetori");
+	//	test.push_back("khubam") ;
+	//	
+	//	cout<<test.size()<<endl;
+	//	test.erase(test.begin() + 1);
+	//	cout<<test[1]<<endl;
+	//	cout<<test.size()<<endl;
+	//	
+	//	return 0;
+	//cout << "In the name of God \nWelcome to SharfSearch Project-Phase1 Developed by Mohammad Nikan Ghorbani and Mohammad Haghighat." << endl;
+	//cout << "Please select one of these options:" << endl << "1.Count of search statement in each file using default data (statement as input)";
+	//cout << endl << "2.Replace in file (File path, statement, replace term as input)" << endl << "3.Index of search statement using default data (statement as input)";
+	//cout << endl << endl << "0.Exit";
+	//cout << endl << endl << "Enter number of operation: ";
+	//short input;
+	//cin >> input;
+>>>>>>> origin/master
 
-		exit(0);
+	//if (input == 0)
 
-	if (input == 1)
-		phase1::count();
+	//	exit(0);
 
-	if (input == 2)
-		phase1::replace();
+	//if (input == 1)
+	//	phase1::count();
 
-	if (input == 3)
-		phase1::report_index();
+	//if (input == 2)
+	//	phase1::replace();
 
+	//if (input == 3)
+	//	phase1::report_index();
+
+<<<<<<< HEAD
 	cout << endl << "----------------------------------" << endl << endl;
 	return 0;*/
+=======
+	//cout << endl << "----------------------------------" << endl << endl;
+
+
+
+	return 0;
+>>>>>>> origin/master
 }

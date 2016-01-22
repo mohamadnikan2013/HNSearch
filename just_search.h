@@ -137,8 +137,7 @@ namespace bool_search
 		short is_and;
 	public:
 		object_to_compare* result;
-		compare_doer(short is_and, map<string, struct index_output::index_row>* main_index_table,
-			object_to_compare* first, object_to_compare* second)
+		compare_doer(short is_and, map<string, struct index_output::index_row>* main_index_table,object_to_compare* first, object_to_compare* second)
 		{
 			this->first = first;
 			this->second = second;
