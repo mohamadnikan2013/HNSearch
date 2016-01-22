@@ -10,11 +10,25 @@
 #include<vector>
 //#include<iterator>
 #include"infrastructure.h"
+#include "AI.h"
 using namespace std;
 namespace bool_search
 {
 	class tools {
 	public:
+		static string wrong_finder(string input, map<string, struct index_output::index_row>& mymap)
+		{
+			new_indexing::process_of_match_calculation doer(input, mymap);
+			string result = doer.gen_output();
+			if (result == "#")
+			{
+				return input;
+			}
+			else
+			{
+				return result;
+			}
+		}
 		static vector<string> search_splitter(string input)
 		{
 			vector<string> result;
@@ -183,17 +197,19 @@ namespace bool_search
 		}
 	};
 
-	static object_to_compare* constructor_when_OBJ_ID_is_combined_with_raw_string(string& input, map<int, object_to_compare*>* saved_objects)
+	static object_to_compare* constructor_when_OBJ_ID_is_combined_with_raw_string(string& input, map<int, object_to_compare*>* saved_objects,
+		map<string, struct index_output::index_row>* main_index_table)
 	{
 		if (input.substr(0, 6) == "OBJ_ID")
 			return (*saved_objects)[stoi(input.substr(6, input.size() - 6))];
 		else
 		{
 			auto result = new object_to_compare(input);
-			result->cal_result();
+			result->cal_result(main_index_table);
 			if (result->object_results->size() == 0)
 			{
-
+				string function_output = tools::wrong_finder(input, *main_index_table);
+				result = new object_to_compare(function_output);
 			}
 
 
@@ -204,7 +220,7 @@ namespace bool_search
 	static object_to_compare* two_word_compare(object_to_compare* first_result, string& AND_or_OR, string& second_word, map<string, index_output::index_row>* main_index_table,
 		map<int, object_to_compare*>* saved_objects)
 	{
-		auto second = constructor_when_OBJ_ID_is_combined_with_raw_string(second_word, saved_objects);
+		auto second = constructor_when_OBJ_ID_is_combined_with_raw_string(second_word, saved_objects, main_index_table);
 		auto is_and = tools::AND_OR_determiner(AND_or_OR);
 
 		auto compare_action = new compare_doer(is_and, main_index_table, first_result, second);
@@ -221,9 +237,9 @@ namespace bool_search
 		else if ((my_words.size() % 2) != 1)
 			cout << "me: Error invalid my_words.size() - it is = " << my_words.size() << endl; //FOR DEBUG
 
-		auto first = constructor_when_OBJ_ID_is_combined_with_raw_string (my_words[0], saved_objects);
+		auto first = constructor_when_OBJ_ID_is_combined_with_raw_string (my_words[0], saved_objects, main_index_table);
 
-		auto second = constructor_when_OBJ_ID_is_combined_with_raw_string(my_words[2], saved_objects); //It should be 2 because my_words[1] contains AND or OR
+		auto second = constructor_when_OBJ_ID_is_combined_with_raw_string(my_words[2], saved_objects, main_index_table); //It should be 2 because my_words[1] contains AND or OR
 
 		auto is_and = tools::AND_OR_determiner(my_words[1]);
 
@@ -249,7 +265,7 @@ namespace bool_search
 		auto my_search_words = tools::search_splitter(input);
 		if (my_search_words.size() == 1)
 		{
-			auto pre_result = constructor_when_OBJ_ID_is_combined_with_raw_string(my_search_words[0], saved_objects);
+			auto pre_result = constructor_when_OBJ_ID_is_combined_with_raw_string(my_search_words[0], saved_objects, main_index_table);
 			if (pre_result->is_string)
 			{
 				pre_result->cal_result(main_index_table);
@@ -322,6 +338,14 @@ namespace bool_search
 		
 		std::transform(input.begin(), input.end(), input.begin(), ::tolower);
 
+		
+		input = searching_tools::my_replace(input, "not ", "NOT_");
+		input = searching_tools::my_replace(input, "and", "AND");
+		input = searching_tools::my_replace(input, "or", "OR");
+		//THESE REPLACEMENTS OF INPUT ARE NEEDED FOR CORRECT FUNCTION OF STOP WORDS REMOVER
+		
+		stop_words_in_query_checker_and_alerter(input, stop_words_set);
+
 		string str = input;
 		wstring word_ws;
 		word_ws.assign(str.begin(), str.end());
@@ -329,14 +353,8 @@ namespace bool_search
 		stemming::english_stem<> StemEnglish;
 		StemEnglish(word_ws);
 		str.assign(word_ws.begin(), word_ws.end());
-		
+
 		input = str;
-		input = searching_tools::my_replace(input, "not ", "NOT_");
-		input = searching_tools::my_replace(input, "and", "AND");
-		input = searching_tools::my_replace(input, "or", "OR");
-		//THESE REPLACEMENTS OF INPUT ARE NEEDED FOR CORRECT FUNCTION OF STOP WORDS REMOVER
-		
-		stop_words_in_query_checker_and_alerter(input, stop_words_set);
 
 		string processed_input = replace_items_in_parentheses(input, saved_objects, main_index_table);
 

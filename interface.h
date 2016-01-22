@@ -17,6 +17,53 @@ namespace gui
 		cin.ignore();
 	}
 }
+namespace final_interface
+{
+	
+	void mymain() {
+		//GETIING DATA FROM INDEX DB
+		file myfile("Data/AppData/index.txt", 0);
+		myfile.StartWork();
+		map<string, struct index_output::index_row> mymap = index_output::str_deserializer(myfile.content);
+		cout << mymap.size() << endl;
+
+		//GETTING STOPWORDS
+		auto stop_words_set = indexing::stop_words_SET_generator();
+
+
+		//QUERY RESOLVER
+		while (1)
+		{
+			cout << "Please Enter your query:" << endl;
+			string search_string;
+
+			ws(cin);
+			getline(cin, search_string);
+			//Validate the QUERY AND AVOID Nulls, ).count != (.count ...
+			unsigned long start = clock();
+
+
+
+			auto result = bool_search::final_result_of_query(search_string, &mymap, stop_words_set);
+			cout << "Count of matches: " << result->main_object_if_object->size() << endl << endl;
+			cout << "Time taken in second(s): " << (clock() - start) / (double)CLOCKS_PER_SEC << endl;
+
+			if (result->main_object_if_object->size() != 0) {
+				cout << "Do you want to get file numbers? (Y/N) ";
+				string user_answer;
+				cin >> user_answer;
+				if ((user_answer == "Y") || (user_answer == "y"))
+				{
+					bool_search::tools::print_set(result->main_object_if_object);
+					//ADD PRINTING FILE PATH
+					cout << "Printing " << result->main_object_if_object->size() << " files finished" << endl;
+				}
+			}
+			cout << "Query was completed" << endl << endl << "====================================" << endl << endl << endl;
+			delete result;
+		}
+	}
+}
 namespace phase4
 {
 	void last_test()

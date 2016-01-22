@@ -22,7 +22,8 @@ string beautiful_find(string statement, string data)
 }
 int main(int argc, char** argv) {
 	//YOU HAVE TO TEST THE CODE IN DEV-C++ BEFORE SENDING TO QUERA
-	phase3::test_of_final_query_resolver();
+	//phase3::test_of_final_query_resolver();
+	final_interface::mymain();
 	//phase2::index();
 //<<<<<<< HEAD
 	return 0;

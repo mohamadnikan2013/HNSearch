@@ -194,7 +194,7 @@ namespace new_indexing {
 
 		}
 		/*map<int, string>* output_map;*/
-		void gen_output()
+		string gen_output()
 		{
 			/*output_map = new map<int, string>;*/
 			vector<string> output_vec;
@@ -202,7 +202,7 @@ namespace new_indexing {
 			for (auto it = ret.first; it != ret.second; ++it)
 			{
 				output_vec.push_back(it->second);
-				cout << it->second << endl;
+				cout << output_vec.size() << "_" << it->second << endl;
 				if (output_vec.size() > 10)
 					break;
 			}
@@ -210,19 +210,22 @@ namespace new_indexing {
 			for (auto it = ret.first; it != ret.second; ++it)
 			{
 				output_vec.push_back(it->second);
-				cout << it->second << endl;
+				cout << output_vec.size() << "_" << it->second << endl;
 				if (output_vec.size() > 20)
 					break;
 			}
-			ret = similar_words->equal_range(3);
-			for (auto it = ret.first; it != ret.second; ++it)
+			cout << "your query is wrong or not find please enter your correct word or if your correct word isn't here please enter 0 to DOWN search ";
+			int  order;
+			cin >> order;
+			if (order == 0)
 			{
-				output_vec.push_back(it->second);
-				cout << it->second << endl;
-				if (output_vec.size() > 30)
-					break;
-			}
+				return "#";
 
+			}
+			else
+			{
+				return output_vec[order - 1];
+			}
 
 		}
 	};
