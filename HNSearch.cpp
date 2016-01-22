@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 	//YOU HAVE TO TEST THE CODE IN DEV-C++ BEFORE SENDING TO QUERA
 	phase3::test_of_final_query_resolver();
 	//phase2::index();
-<<<<<<< HEAD
+//<<<<<<< HEAD
 	return 0;
 	/*cout << "In the name of God \nWelcome to SharfSearch Project-Phase1 Developed by Mohammad Nikan Ghorbani and Mohammad Haghighat." << endl;
 	cout << "Please select one of these options:" << endl << "1.Count of search statement in each file using default data (statement as input)";
@@ -85,11 +85,11 @@ int main(int argc, char** argv) {
 <<<<<<< HEAD
 	cout << endl << "----------------------------------" << endl << endl;
 	return 0;*/
-=======
+//=======
 	//cout << endl << "----------------------------------" << endl << endl;
 
 
 
 	return 0;
->>>>>>> origin/master
+//>>>>>>> origin/master
 }
