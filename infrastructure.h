@@ -10,8 +10,44 @@
 	#include <sstream>
 	#include <map>
 	#include "OleanderStemmingLibrary-master/stemming/english_stem.h"
+#include<set>
 	using namespace std;
 	namespace working_with_file {
+		string file_path_replace(string content, string from, string to)
+		{
+			string result;
+			int start_index = content.find(from);
+
+			if (start_index == -1)
+				return content;
+
+			//std::replace(content.begin(), content.end(), from, to);
+			while (start_index != -1) {
+				content.replace(start_index, from.size(), to);//ATTENTION IT IS NOT SAFE: 
+				start_index = content.find(from);
+			}
+			//int index_to_change = content.find(from);
+			//content.erase(index_to_change, from.size());
+
+			//content.insert(index_to_change, to);
+			result = content;
+			return result;
+		}
+		static vector<string> search_splitter(string input)
+		{
+			input = file_path_replace(input, " ", "?");
+			vector<string> result;
+			istringstream iss(input);
+			while (iss)
+			{
+				string sub;
+				iss >> sub;
+				sub = file_path_replace(sub, "?", " ");
+				result.push_back(sub);
+			}
+			result.erase(result.end() - 1);
+			return result;
+		}
 		//static int id_maker(void)
 		//{
 		//	static int itterator = 0;
@@ -150,10 +186,23 @@
 				id_data.write2(output, 0);
 				cout << "File Ids Saved" << endl;
 			}
-		
+
+			static set<int>* retrieve_file_ids(void)
+			{
+				file id_data("Data/AppData/id.txt", 0);
+				id_data.StartWork();
+				vector<string> my_lines = search_splitter(id_data.content);
+				auto result = new set<int>;
+				for (auto line : my_lines)
+				{
+					result->insert(stoi(line.substr(0, line.find('!'))));
+				}
+				return result;
+			}
 		};
 	}
 	namespace searching_tools{
+		
 		string my_replace(string content, string from, string to)
 		{
 			string result;
@@ -220,12 +269,6 @@
 				void cal_for_each_file(void);
 				short exist(vector<file_and_count>& list_of_file_paths, string& input);
 			
-			
-	//		search_work(void)
-	//		{
-	//			spacing_chars.push_back(' ');
-	//			spacing_chars.push_back('\n');
-	//		}
 			void do_it(void)
 			{
 				//Please SET input_data AND statement_list before running this function.
@@ -476,6 +519,7 @@
 	}
 	//indexing namespace is mainly developed by Mohammad Nikan Ghorbani
 	namespace indexing {
+		
 		//struct word_with_place {
 		//	string word;
 		//	index_output::place place;
@@ -505,21 +549,12 @@
 					
 					word = spliter(content);
 					//stop_words_remover();
+					/*if (content.find("computer") != -1)
+						for (auto item : word)
+							if (item == "computer")
+								cout << "found computer" << endl;*/
 
 					stemming_function();
-
-					/*while (stop_words_content.size() > 0)
-					{
-	
-						string current_word = stop_words_content.substr(0, stop_words_content.find('\n'));
-					
-						stop_words.push_back(current_word);
-						cout<<"Importing: "<<current_word<<endl;
-						stop_words_content = stop_words_content.substr(stop_words_content.find('\n') + 1, stop_words_content.size() - stop_words_content.find('\n') - 1);
-				
-					}*/
-				
-				
 				}			
 		};
 		void normalize::start_work(void)
@@ -544,7 +579,13 @@
 		vector<string> normalize::spliter(string str)
 		{
 			//vector<string> spacing_chars = { " ", "\n", ",", ".", "\"", ">", "<", "!", "?", "/", "|", ")", "(", "}", "{" };
-			string spacing_char_arr[] = { " ", "\n", ",", ".", "\"", ">", "<", "!", "?", "/", "|", ")", "(", "}", "{", "\t", "+", "-", "[","]", ":" };
+			char a = 9, b = 28, c = 96;
+			stringstream as, bs, cs;
+			as << a;
+			bs << b;
+			cs << c;
+			string spacing_char_arr[] = { " ", "\n", ",", ".", "\"", ">", "<", "!", "?", "/", "|", ")", "(", "}", "{", "\t", "+", "-", "[","]", ":"
+				, "~", "!", "@", "#", "$", "%", "^", "&", "*", "_", ";", "\"", "\'", "", "", "=", "\\", as.str(), bs.str(), cs.str() };//, "", ""};
 			vector<string> spacing_chars(spacing_char_arr, spacing_char_arr + sizeof(spacing_char_arr) / sizeof(spacing_char_arr[0]));
 
 			for (int i = 1; i < spacing_chars.size(); i++)
@@ -574,6 +615,8 @@
 			{
 				string str = normalize::word[i];
 
+				if (str == "apple")
+					cout << "ATTNETION: COMPUTER WAS FOUND";
 				wstring word_ws;
 				word_ws.assign(str.begin(), str.end());
 
@@ -609,7 +652,29 @@
 			return words;
 		}*/
 
+		static vector<string> stop_words_vector_generator()
+		{
+			working_with_file::file stop_words_file("Data/AppData/stop_words.txt", 0);
+			stop_words_file.StartWork();
 
+			string stop_words_content = stop_words_file.content;
+			vector<string> stop_words = indexing::normalize::spliter(stop_words_content);
+			return stop_words;
+		}
+		static set<string>* stop_words_SET_generator()
+		{
+			working_with_file::file stop_words_file("Data/AppData/stop_words.txt", 0);
+			stop_words_file.StartWork();
+
+			string stop_words_content = stop_words_file.content;
+			vector<string> stop_words = indexing::normalize::spliter(stop_words_content);
+
+			auto result = new set<string>;
+			for (auto item : stop_words)
+				result->insert(item);
+
+			return result;
+		}
 	}
 	//index_output namespace is mainly developed by Mohammad Haghighat
 	namespace index_output

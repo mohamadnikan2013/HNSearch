@@ -10,7 +10,8 @@ it under the terms of the BSD License.
 #define __ENGLISH_STEM_H__
 
 #include "stemming.h"
-
+//#include <iostream>
+//using namespace std;
 namespace stemming
     {
     /** \addtogroup Stemming
@@ -18,9 +19,7 @@ namespace stemming
     * @{*/
     /**
     \class english_stem
-
     Overview
-
     I have made more than one attempt to improve the structure of the Porter algorithm 
     by making it follow the pattern of ending removal of the Romance language stemmers.
     It is not hard to see why one should want to do this: step 1b of the Porter stemmer 
@@ -29,19 +28,15 @@ namespace stemming
     will try to do so. This seems to be a deficiency in the Porter stemmer, not shared by
     the Romance stemmers. Again, the divisions between steps 2, 3 and 4 seem rather arbitrary,
     and are not found in the Romance stemmers.
-
     Nevertheless, these attempts at improvement have been abandoned. They seem to lead to a
     more complicated algorithm with no very obvious improvements. A reason for not taking
     note of the outcome of step 1b may be that English endings do not determine word categories
     quite as strongly as endings in the Romance languages. For example, condition and position
     in French have to be nouns, but in English they can be verbs as well as nouns,
-
     We are all conditioned by advertising
     They are positioning themselves differently today
-
     A possible reason for having separate steps 2, 3 and 4 is that d-suffix combinations in
     English are quite complex, a point which has been made elsewhere.
-
     But it is hardly surprising that after twenty years of use of the Porter stemmer, certain
     improvements do suggest themselves, and a new algorithm for English is therefore offered
     here. (It could be called the 'Porter2' stemmer to distinguish it from the Porter stemmer,
@@ -51,30 +46,22 @@ namespace stemming
     forms is included. In December 2001 there were two further adjustments: (5) Steps 5a and 5b
     of the old Porter stemmer were combined into a single step. This means that undoubling final
     ll is not done with removal of final e. (6) In Step 3 ative is removed only when in region R2. 
-
     To begin with, here is the basic algorithm without reference to the exceptional forms.
     An exact comparison with the Porter algorithm needs to be done quite carefully if done at
     all. Here we indicate by * points of departure, and by + additional features.
     In the sample vocabulary, Porter and Porter2 stem slightly under 5% of words to different forms.
-
     Dr. Martin Porter
-
     Define a vowel as one of
         - a e i o u y 
-
     Define a double as one of
         - bb dd ff gg mm nn pp rr tt 
-
     Define a valid li-ending as one of
         - c d e g h k m n r t 
-
     Define a short syllable in a word as either (a) a vowel followed by a non-vowel
     other than w, x or Y and preceded by a non-vowel, or * (b) a vowel at the beginning
     of the word followed by a non-vowel.
-
     So rap, trap, entrap end with a short syllable, and ow, on, at are classed as short syllables.
     But uproot, bestow, disturb do not end with a short syllable.
-
     A word is called short if it consists of a short syllable preceded by zero or more consonants.
     R1 is the region after the first non-vowel following a vowel, or the end of the word if there is no such non-vowel.
     R2 is the region after the first non-vowel following a vowel in R1, or the end of the word if there is no such non-vowel.
@@ -83,9 +70,7 @@ namespace stemming
     Set initial y, or y after a vowel, to Y, and then establish the regions R1 and R2.
     
     \par Algorithm:
-
     <b>Step 1a:</b>
-
     Search for the longest among the following suffixes, and perform the action indicated:
             - sses
                 - Replace by ss.
@@ -95,9 +80,7 @@ namespace stemming
                 - Delete if the preceding word part contains a vowel not immediately before the s (so gas and this retain the s, gaps and kiwis lose it).
             - us+ ss
                 - Do nothing.
-
     <b>Step 1b:</b>
-
     Search for the longest among the following suffixes, and perform the action indicated:
             - eed eedly+
                 - Replace by ee if in R1.
@@ -106,14 +89,10 @@ namespace stemming
                 - If the word ends at, bl or iz add e (so luxuriat -> luxuriate), or 
                 - If the word ends with a double remove the last letter (so hopp -> hop), or 
                 - If the word is short, add e (so hop -> hope).
-
     <b>Step 1c:</b>
-
     Replace suffix y or Y by i if preceded by a non-vowel which is
     not the first letter of the word (so cry -> cri, by -> by, say -> say)
-
     <b>Step 2:</b>
-
     Search for the longest among the following suffixes, and, if found and in R1, perform the action indicated:
             - tional
                 - Replace by tion.
@@ -147,9 +126,7 @@ namespace stemming
                 - Replace by less.
             - li+
                 - Delete if preceded by a valid li-ending.
-
     <b>Step 3:</b>
-
     Search for the longest among the following suffixes, and, if found and in R1, perform the action indicated:
             - tional+
                 - Replace by tion.
@@ -163,17 +140,13 @@ namespace stemming
                 - Delete.
             - ative*
                 - Delete if in R2.
-
     <b>Step 4:</b>
-
     Search for the longest among the following suffixes, and, if found and in R2, perform the action indicated:
             - al ance ence er ic able ible ant ement ment ent ism ate iti ous ive ize 
                 - Delete 
             - ion 
                 - Delete if preceded by s or t.
-
     <b>Step 5:</b>
-
     Search for the following suffixes, and, if found, perform the action indicated:
             - e 
                 - Delete if in R2, or in R1 and not preceded by a short syllable.
@@ -251,9 +224,10 @@ namespace stemming
                 }
 
             stem<string_typeT>::find_r2(text, L"aeiouyAEIOUY");
-
+			//cout <<text << endl;
             //step 1a:
             step_1a(text);
+			//cout <<text << endl;
             //exception #2
             if (is_exception_post_step1a(text) )
                 {
@@ -261,17 +235,23 @@ namespace stemming
                 }
             //step 1b:
             step_1b(text);
+			//cout <<text << endl;
+
             //step 1c:
             step_1c(text);
+			//cout <<text << endl;
             //step 2:
             step_2(text);
+			//cout <<text << endl;
             //step 3:
             step_3(text);
+			//cout <<text << endl;
             //step 4:
             step_4(text);
+			//cout <<text << endl;
             //step 5:
-            step_5(text);
-
+            //step_5(text);
+			//cout <<text << end;;
             stem<string_typeT>::unhash_y(text);
             }
     private:
@@ -955,7 +935,6 @@ namespace stemming
         /**Define a short syllable in a word as either
         (a) a vowel followed by a non-vowel other than w, x or Y and preceded by a non-vowel, or 
         (b) a vowel at the beginning of the word followed by a non-vowel.
-
         So rap, trap, entrap end with a short syllable, and ow, on, at are classed as short syllables.
         But uproot, bestow, disturb do not end with a short syllable.*/
         //---------------------------------------------

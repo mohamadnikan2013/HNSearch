@@ -3,6 +3,7 @@
 #include "infrastructure.h"
 #include "just_search.h"
 #include "AI.h"
+#include <ctime>
 using namespace std;
 //using namespace searching_tools;
 using namespace working_with_file;
@@ -26,19 +27,43 @@ namespace phase3
 {
 	void test_of_final_query_resolver()
 	{
+		/*string sal = "salam";
+		string testt = sal.substr(0, 30);
+		cout << testt.size();
+		cout << sal.substr(0, 20)<<endl;
+		cin >> sal;*/
 		file myfile("Data/AppData/index.txt", 0);
 		myfile.StartWork();
 		map<string, struct index_output::index_row> mymap = index_output::str_deserializer(myfile.content);
 		cout << mymap.size() << endl;
 
+		auto stop_words_set = indexing::stop_words_SET_generator();
 		while (1)
 		{
 			cout << "Please Enter your query:" << endl;
 			string search_string;
 
+			ws(cin);
 			getline(cin, search_string);
-			auto result = bool_search::final_result_of_query(search_string, &mymap);
+			//Validate the QUERY AND AVOID Nulls, ).count != (.count ...
+			unsigned long start = clock();
+
+			
+
+			auto result = bool_search::final_result_of_query(search_string, &mymap, stop_words_set);
 			cout << "Count of matches: " << result->main_object_if_object->size() << endl << endl;
+			cout << "Time taken in second(s): " << (clock() - start) / (double) CLOCKS_PER_SEC << endl;
+			cout << "Do you want to get file numbers? (Y/N) ";
+			string user_answer;
+			cin >> user_answer;
+			if ((user_answer == "Y") || (user_answer == "y"))
+			{
+				bool_search::tools::print_set(result->main_object_if_object);
+				//ADD PRINTING FILE PATH
+				cout << "Printing " << result->main_object_if_object->size() << " files finished" << endl;
+			}
+			
+			cout << "Query was completed" << endl << endl << "====================================" << endl << endl << endl;
 		}
 	}
 	void test_of_string_to_result()
@@ -85,11 +110,7 @@ namespace phase2{
 		cout << endl << "Processing..." << endl;
 		string current_content = "";
 		
-		working_with_file::file stop_words_file("Data/AppData/stop_words.txt", 0);
-		stop_words_file.StartWork();
-
-		string stop_words_content = stop_words_file.content;
-		vector<string> stop_words = indexing::normalize::spliter(stop_words_content);
+		
 		string console_output = "";
 		for (int i = 0; i < d.files.size(); i++)
 		{
@@ -112,7 +133,7 @@ namespace phase2{
 				s.process_inputs(n.word, i + 1);
 				//d.files[i].content = d.files[i].content.substr(current_content.size(), d.files[i].content.size() - current_content.size());
 				console_output += "File index process completed with id: " + (to_string(i + 1)) + "\n";
-				if ((i % 5 == 0) || i == d.files.size() - 1)
+				if ((i % 5 == 0) || (i == (d.files.size() - 1)))
 				{
 					cout << console_output;
 					console_output = "";
@@ -120,6 +141,7 @@ namespace phase2{
 				
 		}
 		cout << "Now, Removing stopwords from hole index..." << endl;
+		auto stop_words = indexing::stop_words_vector_generator();
 		s.remove_stop_words(&stop_words);
 		cout << "Saving generated index..." << endl;
 		string file_output = "";

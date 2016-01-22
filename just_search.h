@@ -73,12 +73,23 @@ namespace bool_search
 		//ATTENTION: DO NOT USE object_results BEFORE CALLING cal_result method
 
 		//my_T main_object;
-		object_to_compare(string& input, short _is_not = 0)
+		object_to_compare(string& input)
 		{
-			main_object_if_string = input;
-			is_string = 1;
-			Description = input + " That was the string";
-			this->is_not = _is_not;
+			//, short _is_not = 0
+			if (input.substr(0, 4) == "NOT_")
+			{
+				main_object_if_string = input.substr(4);
+				is_string = 1;
+				Description = input + " : That was the string";
+				this->is_not = 1;
+			}
+			else
+			{
+				main_object_if_string = input;
+				is_string = 1;
+				Description = input + " That was the string";
+				this->is_not = 0;
+			}
 		}
 		object_to_compare(set<int>* input, string& Description, short _is_not = 0)
 		{
@@ -96,6 +107,18 @@ namespace bool_search
 				if (main_index_table == NULL)
 					cout << "my Error main_index_table = NULL" << endl;
 				object_results = tools::place_vector_to_Int_set((*main_index_table)[main_object_if_string].places_occurred);
+
+
+				if (this->is_not)
+				{
+					auto whole_file_ids = working_with_file::data_to_work::retrieve_file_ids();
+					auto final_result = new set<int>;
+					set_difference(whole_file_ids->begin(), whole_file_ids->end(), object_results->begin(), object_results->end(),
+						inserter(*final_result, final_result->end()));
+
+					object_results = final_result;
+				}
+				return object_results;
 				//* myvec = &((*main_index_table)[main_object_if_string].places_occurred);
 			}
 			else if (is_string == 0)
@@ -166,7 +189,17 @@ namespace bool_search
 		if (input.substr(0, 6) == "OBJ_ID")
 			return (*saved_objects)[stoi(input.substr(6, input.size() - 6))];
 		else
-			return new object_to_compare(input);
+		{
+			auto result = new object_to_compare(input);
+			result->cal_result();
+			if (result->object_results->size() == 0)
+			{
+
+			}
+
+
+			return result;
+		}
 	}
 
 	static object_to_compare* two_word_compare(object_to_compare* first_result, string& AND_or_OR, string& second_word, map<string, index_output::index_row>* main_index_table,
@@ -190,6 +223,7 @@ namespace bool_search
 			cout << "me: Error invalid my_words.size() - it is = " << my_words.size() << endl; //FOR DEBUG
 
 		auto first = constructor_when_OBJ_ID_is_combined_with_raw_string (my_words[0], saved_objects);
+
 		auto second = constructor_when_OBJ_ID_is_combined_with_raw_string(my_words[2], saved_objects); //It should be 2 because my_words[1] contains AND or OR
 
 		auto is_and = tools::AND_OR_determiner(my_words[1]);
@@ -217,10 +251,15 @@ namespace bool_search
 		if (my_search_words.size() == 1)
 		{
 			auto pre_result = constructor_when_OBJ_ID_is_combined_with_raw_string(my_search_words[0], saved_objects);
-			pre_result->cal_result(main_index_table);
-			string myDes = "This is constructed object from search_statement_to_result when just one word inserted";
-			auto result = new object_to_compare(pre_result->object_results, myDes);
-			return result;
+			if (pre_result->is_string)
+			{
+				pre_result->cal_result(main_index_table);
+				string myDes = "This is constructed object from search_statement_to_result when just one word inserted";
+				auto result = new object_to_compare(pre_result->object_results, myDes);
+				return result;
+			}
+			else
+				return pre_result;
 		}
 		auto result = three_word_compare_then_two_By_two(my_search_words, main_index_table, saved_objects);
 		return result;
@@ -253,15 +292,53 @@ namespace bool_search
 		saved_objects->insert({ (saved_objects->size()) + 1, save_this_obj });
 
 		input = searching_tools::my_replace(input, "(" + inner_text_of_parentheses + ")", "OBJ_ID" + to_string(saved_objects->size()));
-		return input;
+		return replace_items_in_parentheses(input, saved_objects, main_index_table);
 		//ADD SUPPORT TO SEARCH_STATEMENT_TO_RESULT FOR RECOGNIZING OBJ_ID FROM MAP
 		//This function should be tested seperately
 	}
+	
+	static void stop_words_in_query_checker_and_alerter(string input, set<string>* stop_words)
+	{
+		input = searching_tools::my_replace(input, "(", " ");
+		input = searching_tools::my_replace(input, ")", " ");
 
+		auto my_vec = tools::search_splitter(input);
+		
+		for (auto item : my_vec)
+		{
+			if (stop_words->count(item))
+				cout << "Your query contains \"" + item + "\" which is a stop word and that can affect your search result in a bad way." << endl
+				<< "Please use another query without this word" << endl;
+			//check if exists in set
+			//then alert the user
+			
+		}
+	}
 	static object_to_compare* final_result_of_query(string input,
-		map<string, struct index_output::index_row>* main_index_table)
+		map<string, struct index_output::index_row>* main_index_table,
+		set<string>* stop_words_set)
 	{
 		map<int, object_to_compare*>* saved_objects = new map<int, object_to_compare*>;
+		
+		
+		std::transform(input.begin(), input.end(), input.begin(), ::tolower);
+
+		string str = input;
+		wstring word_ws;
+		word_ws.assign(str.begin(), str.end());
+
+		stemming::english_stem<> StemEnglish;
+		StemEnglish(word_ws);
+		str.assign(word_ws.begin(), word_ws.end());
+		
+		input = str;
+		input = searching_tools::my_replace(input, "not ", "NOT_");
+		input = searching_tools::my_replace(input, "and", "AND");
+		input = searching_tools::my_replace(input, "or", "OR");
+		//THESE REPLACEMENTS OF INPUT ARE NEEDED FOR CORRECT FUNCTION OF STOP WORDS REMOVER
+		
+		stop_words_in_query_checker_and_alerter(input, stop_words_set);
+
 		string processed_input = replace_items_in_parentheses(input, saved_objects, main_index_table);
 
 		return search_statement_to_result(processed_input, main_index_table, saved_objects);
