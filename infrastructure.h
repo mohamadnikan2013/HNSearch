@@ -615,8 +615,8 @@
 			{
 				string str = normalize::word[i];
 
-				if (str == "apple")
-					cout << "ATTNETION: COMPUTER WAS FOUND";
+				/*if (str == "apple")
+					cout << "ATTNETION: COMPUTER WAS FOUND";*/
 				wstring word_ws;
 				word_ws.assign(str.begin(), str.end());
 

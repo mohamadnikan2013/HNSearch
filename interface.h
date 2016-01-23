@@ -21,6 +21,11 @@ namespace final_interface
 {
 	
 	void mymain() {
+		/*while (1) {
+			string test;
+			cin >> test;
+			cout << bool_search::tools::stem_word(test) << endl;
+		}*/
 		//GETIING DATA FROM INDEX DB
 		file myfile("Data/AppData/index.txt", 0);
 		myfile.StartWork();

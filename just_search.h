@@ -11,6 +11,7 @@
 //#include<iterator>
 #include"infrastructure.h"
 #include "AI.h"
+#include "OleanderStemmingLibrary-master/stemming/english_stem.h"
 using namespace std;
 namespace bool_search
 {
@@ -42,6 +43,7 @@ namespace bool_search
 			result.erase(result.end() - 1);
 			return result;
 		}
+		
 		static short AND_OR_determiner(string& input)
 		{
 			if ((input == "AND") || (input == "and"))
@@ -61,7 +63,7 @@ namespace bool_search
 			for (auto item : (*input))
 				cout << item << endl;
 
-			cout << "Finished set print" << endl;
+			//cout << "Finished set print" << endl;
 		}
 		static set<int>* place_vector_to_Int_set(vector<index_output::place>& input)
 		{
@@ -72,7 +74,18 @@ namespace bool_search
 			}
 			return result;
 		}
-		
+		static string stem_word(string str)
+		{
+			//string str = input;
+			wstring word_ws;
+			word_ws.assign(str.begin(), str.end());
+
+			stemming::english_stem<> StemEnglish;
+			StemEnglish(word_ws);
+			string result = "";
+			result.assign(word_ws.begin(), word_ws.end());
+			return result;
+		}
 	};
 	//template<class my_T>
 	class object_to_compare
@@ -263,8 +276,12 @@ namespace bool_search
 		map<string, struct index_output::index_row>* main_index_table, map<int, object_to_compare*>* saved_objects)
 	{
 		auto my_search_words = tools::search_splitter(input);
+
+		
+
 		if (my_search_words.size() == 1)
 		{
+
 			auto pre_result = constructor_when_OBJ_ID_is_combined_with_raw_string(my_search_words[0], saved_objects, main_index_table);
 			if (pre_result->is_string)
 			{
@@ -338,7 +355,18 @@ namespace bool_search
 		
 		std::transform(input.begin(), input.end(), input.begin(), ::tolower);
 
-		
+		auto temp_vec = tools::search_splitter(input);
+		for (int i = 0; i < temp_vec.size(); i++)
+			 temp_vec[i] = tools::stem_word(temp_vec[i]);
+
+		string temp_result = "";
+		for (int i = 0; i < (temp_vec.size() - 1); i++)
+			temp_result += temp_vec[i] + " ";
+
+		if (temp_vec.size() > 0)
+			temp_result += temp_vec[temp_vec.size() - 1];
+
+		input = temp_result;
 		input = searching_tools::my_replace(input, "not ", "NOT_");
 		input = searching_tools::my_replace(input, "and", "AND");
 		input = searching_tools::my_replace(input, "or", "OR");
@@ -346,15 +374,7 @@ namespace bool_search
 		
 		stop_words_in_query_checker_and_alerter(input, stop_words_set);
 
-		string str = input;
-		wstring word_ws;
-		word_ws.assign(str.begin(), str.end());
-
-		stemming::english_stem<> StemEnglish;
-		StemEnglish(word_ws);
-		str.assign(word_ws.begin(), word_ws.end());
-
-		input = str;
+		//input = str;// .substr(1);
 
 		string processed_input = replace_items_in_parentheses(input, saved_objects, main_index_table);
 
