@@ -19,7 +19,7 @@ namespace bool_search
 		static string wrong_finder(string input, map<string, struct index_output::index_row>& mymap)
 		{
 			new_indexing::process_of_match_calculation doer(input, mymap);
-			string result = doer.gen_output();
+			string result = doer.gen_output(input);
 			if (result == "#")
 			{
 				return input;
@@ -59,7 +59,7 @@ namespace bool_search
 		static void print_set(set<int>* input)
 		{
 			for (auto item : (*input))
-				cout << item << endl;
+				cout <<"file ID "<< item << endl;
 
 			cout << "Finished set print" << endl;
 		}

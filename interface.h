@@ -4,24 +4,20 @@
 #include "just_search.h"
 #include "AI.h"
 #include <ctime>
+//#include <windows.h>
 using namespace std;
 //using namespace searching_tools;
 using namespace working_with_file;
-namespace gui
-{
-	void color_test()
-	{
-		system("color 0a");
-		cout << "Hello World";
-
-		cin.ignore();
-	}
-}
 namespace final_interface
 {
 	
 	void mymain() {
+		//HANDLE  hConsole;
+
+		//hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		//GETIING DATA FROM INDEX DB
+		system("Color 1A");
+		cout << endl;
 		file myfile("Data/AppData/index.txt", 0);
 		myfile.StartWork();
 		map<string, struct index_output::index_row> mymap = index_output::str_deserializer(myfile.content);
@@ -34,31 +30,50 @@ namespace final_interface
 		//QUERY RESOLVER
 		while (1)
 		{
+			//system("Color 2B");
+			//cout << endl;
 			cout << "Please Enter your query:" << endl;
 			string search_string;
 
+			//user input
+		/*	system("Color 3A");
+			cout << endl;*/
 			ws(cin);
 			getline(cin, search_string);
 			//Validate the QUERY AND AVOID Nulls, ).count != (.count ...
 			unsigned long start = clock();
 
-
-
+			//count of result
+			//cout << endl;
+			//system("Color 4A");
+			//cout << endl;
 			auto result = bool_search::final_result_of_query(search_string, &mymap, stop_words_set);
 			cout << "Count of matches: " << result->main_object_if_object->size() << endl << endl;
 			cout << "Time taken in second(s): " << (clock() - start) / (double)CLOCKS_PER_SEC << endl;
 
 			if (result->main_object_if_object->size() != 0) {
+				//system("Color 5A");
+				//cout << endl;
 				cout << "Do you want to get file numbers? (Y/N) ";
 				string user_answer;
+
+
+				/*system("Color 6A");*/
+				cout << endl;
 				cin >> user_answer;
 				if ((user_answer == "Y") || (user_answer == "y"))
 				{
+					//shomare file
+					//system("Color 7A");
+					//cout << endl;
 					bool_search::tools::print_set(result->main_object_if_object);
 					//ADD PRINTING FILE PATH
 					cout << "Printing " << result->main_object_if_object->size() << " files finished" << endl;
 				}
 			}
+			//query complete
+			//system("Color 8C");
+			//cout << endl;
 			cout << "Query was completed" << endl << endl << "====================================" << endl << endl << endl;
 			delete result;
 		}
@@ -79,7 +94,7 @@ namespace phase4
 			string str;
 			cin >> str;
 			new_indexing::process_of_match_calculation hello(str, mymap);
-			hello.gen_output();
+			//hello.gen_output();
 		}
 	}
 	void guess_with_calculation()

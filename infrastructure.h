@@ -8,6 +8,7 @@
 	#include <vector>
 	#include <algorithm>
 	#include <sstream>
+	//#include <windows.h>
 	#include <map>
 	#include "OleanderStemmingLibrary-master/stemming/english_stem.h"
 #include<set>
@@ -787,8 +788,15 @@
 
 					}
 					i++;
+
+					
 					if (counter % 500 == 0)
+					{
+						/*HANDLE  hConsole;
+						hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+						SetConsoleTextAttribute(hConsole, 2);*/
 						cout << counter << " th word has been imported" << endl;
+					}
 					result[first] = second;
 					//input is substr-ed at the first of loop
 				}
