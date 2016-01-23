@@ -1,0 +1,8 @@
+{q/1
+abl{able/4
+aple{apple/5
+aple{able/11
+conser{conserv/1
+ronaldo{ronald/1
+seoul{soul/1
+washinton{washington/1
