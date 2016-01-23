@@ -12,9 +12,17 @@ namespace final_interface
 {
 	
 	void mymain() {
+<<<<<<< HEAD
 		//HANDLE  hConsole;
 
 		//hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+=======
+		/*while (1) {
+			string test;
+			cin >> test;
+			cout << bool_search::tools::stem_word(test) << endl;
+		}*/
+>>>>>>> origin/master
 		//GETIING DATA FROM INDEX DB
 		system("Color 1A");
 		cout << endl;
