@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2D8A2BF9-511F-4636-81A8-75C6B1A4547E}</ProjectGuid>
+    <ProjectGuid>{530AF0D1-2695-4C99-BF9E-F1C576F2D6C2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>HNSearch</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>

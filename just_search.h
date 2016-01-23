@@ -60,8 +60,13 @@ namespace bool_search
 	
 		static void print_set(set<int>* input)
 		{
+			working_with_file::file id_data("Data/AppData/id.txt", 0);
+			id_data.StartWork();
+			vector<string> my_lines = working_with_file::search_splitter(id_data.content);
+
+			auto file_id_map = working_with_file::data_to_work::retrieve_file_ids_with_path(my_lines);
 			for (auto item : (*input))
-				cout <<"file ID "<< item << endl;
+				cout <<"file ID "<< item << " " << (*file_id_map)[item] << endl;
 
 			//cout << "Finished set print" << endl;
 		}

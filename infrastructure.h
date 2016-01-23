@@ -200,6 +200,20 @@
 				}
 				return result;
 			}
+			static map<int, string>* retrieve_file_ids_with_path(vector<string> my_lines)
+			{
+				/*file id_data("Data/AppData/id.txt", 0);
+				id_data.StartWork();
+				vector<string> my_lines = search_splitter(id_data.content);*/
+				auto result = new map<int, string>;
+				for (auto line : my_lines)
+				{
+					string id_str = line.substr(0, line.find('!'));
+					string path_str = line.substr(id_str.size() + 1);
+					(*result)[stoi(id_str)] = path_str;
+				}
+				return result;
+			}
 		};
 	}
 	namespace searching_tools{
